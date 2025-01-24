@@ -2,6 +2,7 @@ package com.game.config;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -69,6 +70,13 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
         templateEngine.setEnableSpringELCompiler(false);
         return templateEngine;
     }
+    @Bean
+    public SessionFactory sessionFactory() {
+        return new org.hibernate.cfg.Configuration()
+                .configure("hibernate.cfg.xml") // Load hibernate.cfg.xml
+                .buildSessionFactory();
+    }
+
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
@@ -76,5 +84,7 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
         converter.getObjectMapper().setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE);
         converter.getObjectMapper().setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
         converters.add(converter);
+
+
     }
 }
